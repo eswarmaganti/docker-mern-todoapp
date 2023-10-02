@@ -1,0 +1,51 @@
+#Docker compose file for MERN Todo app
+---
+services:
+
+  # for vite react-client
+  react-client:
+    image: react-client
+    build: 
+      context: ./react-client
+      dockerfile: ./react-client/Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./react-client:/usr/app
+    networks:
+      - frontend
+  
+  # for express todo api
+  todo-api:
+    image: todo-api
+    build: 
+      context: ./todo-api
+      dockerfile: ./todo-api/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+    ports:
+      - "5000:5000"
+    networks:
+      - frontend
+      - backend
+    
+    restart: unless-stopped
+  
+  # for mongodb
+  mongodb:
+    image: mongo
+    volumes:
+      - mongodb_data:/data/db
+    env_file:
+      - .env
+    ports:
+      - "27016:27017"
+    networks:
+      - backend
+networks:
+  frontend:
+  backend:
+volumes:
+  mongodb_data:
