@@ -8,8 +8,12 @@ services:
     build: 
       context: ./react-client
       dockerfile: ./react-client/Dockerfile
+    labels:
+      shipyard.primary-route: true
+      shipyard.route: '/'
+    init: true
     ports:
-      - "5173:5173"
+      - "8080:8080"
     volumes:
       - ./react-client:/usr/app
     networks:
@@ -44,6 +48,7 @@ services:
       - "27016:27017"
     networks:
       - backend
+      
 networks:
   frontend:
   backend:
